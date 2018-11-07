@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  DownloadToS3:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: download_to_s3.handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: .debug/
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /download-to-s3/{video-id}
+            Method: ANY
+  DownloadToS3Permission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        'Fn::GetAtt':
+          - DownloadToS3
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+        
+  TranscribeAudio:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: transcribe_audio.handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: .debug/
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /transcribe-audio/{video-name}
+            Method: ANY
+  TranscribeAudioPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        'Fn::GetAtt':
+          - TranscribeAudio
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+  
+  CheckStatus:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: check_status.handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: .debug/
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /check-status/{job-name}
+            Method: ANY
+  CheckStatusPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        'Fn::GetAtt':
+          - CheckStatus
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+        
+  GetTranscripts:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: get_transcripts.handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: .debug/
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /get-transcripts/{json-name}
+            Method: ANY
+  GetTranscriptsPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        'Fn::GetAtt':
+          - GetTranscripts
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+
+
