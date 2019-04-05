@@ -1,0 +1,44 @@
+#popup {
+  width: 320px;
+  padding: 10px;
+  margin: 12px;
+  position: fixed;
+  right: 0;
+  z-index: 10000;
+  border-radius: 2px;
+  box-shadow: 0px 0px 13px 0px rgba(0, 0, 0, 0.44);
+}
+
+div.img-title {
+  width: 110px;
+  content: url("chrome-extension://__MSG_@@extension_id__/assets/title.png");
+}
+
+div.matches{
+  padding-bottom: 5px
+}
+
+button.center{
+  margin: 0 auto;
+  display: block;
+}
+
+.loading_qs {
+  margin: auto;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #f35c4b;
+  width: 25px;
+  height: 25px;
+  padding: 13px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
